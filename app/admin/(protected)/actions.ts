@@ -54,7 +54,7 @@ export async function saveBrand(formData: FormData) {
   else await prisma.brand.create({ data })
   revalidatePath("/admin/brands")
   revalidatePath("/")
-  redirect("/admin/brands")
+  redirect("/admin/brands?success=brand_saved")
 }
 
 export async function deleteBrand(formData: FormData) {
@@ -62,7 +62,7 @@ export async function deleteBrand(formData: FormData) {
   const id = text(formData, "id")
   if (id) await prisma.brand.delete({ where: { id } })
   revalidatePath("/admin/brands")
-  redirect("/admin/brands")
+  redirect("/admin/brands?success=brand_deleted")
 }
 
 export async function saveCategory(formData: FormData) {
@@ -81,7 +81,7 @@ export async function saveCategory(formData: FormData) {
   else await prisma.category.create({ data })
   revalidatePath("/admin/categories")
   revalidatePath("/")
-  redirect("/admin/categories")
+  redirect("/admin/categories?success=category_saved")
 }
 
 export async function deleteCategory(formData: FormData) {
@@ -89,7 +89,7 @@ export async function deleteCategory(formData: FormData) {
   const id = text(formData, "id")
   if (id) await prisma.category.delete({ where: { id } })
   revalidatePath("/admin/categories")
-  redirect("/admin/categories")
+  redirect("/admin/categories?success=category_deleted")
 }
 
 export async function saveBanner(formData: FormData) {
@@ -113,7 +113,7 @@ export async function saveBanner(formData: FormData) {
   else await prisma.banner.create({ data })
   revalidatePath("/admin/banners")
   revalidatePath("/")
-  redirect("/admin/banners")
+  redirect("/admin/banners?success=banner_saved")
 }
 
 export async function deleteBanner(formData: FormData) {
@@ -121,7 +121,7 @@ export async function deleteBanner(formData: FormData) {
   const id = text(formData, "id")
   if (id) await prisma.banner.delete({ where: { id } })
   revalidatePath("/admin/banners")
-  redirect("/admin/banners")
+  redirect("/admin/banners?success=banner_deleted")
 }
 
 export async function saveArticle(formData: FormData) {
@@ -145,7 +145,7 @@ export async function saveArticle(formData: FormData) {
   else await prisma.article.create({ data })
   revalidatePath("/admin/articles")
   revalidatePath("/")
-  redirect("/admin/articles")
+  redirect("/admin/articles?success=article_saved")
 }
 
 export async function deleteArticle(formData: FormData) {
@@ -153,7 +153,7 @@ export async function deleteArticle(formData: FormData) {
   const id = text(formData, "id")
   if (id) await prisma.article.delete({ where: { id } })
   revalidatePath("/admin/articles")
-  redirect("/admin/articles")
+  redirect("/admin/articles?success=article_deleted")
 }
 
 export async function saveProduct(formData: FormData) {
@@ -206,7 +206,7 @@ export async function saveProduct(formData: FormData) {
   revalidatePath("/admin/products")
   revalidatePath("/")
   revalidatePath("/products")
-  redirect("/admin/products")
+  redirect("/admin/products?success=product_saved")
 }
 
 export async function deleteProduct(formData: FormData) {
@@ -214,7 +214,7 @@ export async function deleteProduct(formData: FormData) {
   const id = text(formData, "id")
   if (id) await prisma.product.delete({ where: { id } })
   revalidatePath("/admin/products")
-  redirect("/admin/products")
+  redirect("/admin/products?success=product_deleted")
 }
 
 

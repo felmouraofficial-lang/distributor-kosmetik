@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { BarChart3, Boxes, ImageIcon, LayoutDashboard, Newspaper, Palette, Settings, Tags } from "lucide-react"
 
 import { requireAdmin, logoutAdmin } from "../auth"
+import { AdminStatusToast } from "./AdminStatusToast"
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -58,6 +59,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             {navItems.map((item) => <Link key={item.href} href={item.href} className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold text-black/60 hover:bg-[#FF4F9A]/8">{item.label}</Link>)}
           </nav>
         </header>
+        <AdminStatusToast />
         <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>

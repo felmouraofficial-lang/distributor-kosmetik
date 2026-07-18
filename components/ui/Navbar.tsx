@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Heart, Menu, Search, ShoppingBag, User } from "lucide-react"
@@ -46,6 +46,11 @@ function BrandLogo() {
 function SearchAutocomplete() {
   const [query, setQuery] = useState("")
   const [products, setProducts] = useState<SearchProduct[]>([])
+  const wrapperRef = useRef<HTMLFormElement>(null)
+
+  function closeSuggestions() {
+    setProducts([])
+  }
 
   useEffect(() => {
     const controller = new AbortController()
@@ -66,8 +71,19 @@ function SearchAutocomplete() {
     }
   }, [query])
 
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!wrapperRef.current?.contains(event.target as Node)) {
+        closeSuggestions()
+      }
+    }
+
+    window.addEventListener("pointerdown", handlePointerDown)
+    return () => window.removeEventListener("pointerdown", handlePointerDown)
+  }, [])
+
   return (
-    <form action="/products" className="relative hidden flex-1 md:block">
+    <form ref={wrapperRef} action="/products" className="relative hidden flex-1 md:block" onSubmit={closeSuggestions}>
       <div className="flex items-center rounded-full border border-[#222222]/12 bg-white px-4 shadow-sm">
         <Search className="size-5 text-[#222222]/45" aria-hidden="true" />
         <Input
@@ -83,7 +99,7 @@ function SearchAutocomplete() {
       {products.length ? (
         <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 rounded-lg border border-[#222222]/8 bg-white p-2 shadow-xl shadow-[#222222]/10">
           {products.map((product) => (
-            <Link key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-3 rounded-md p-2 hover:bg-[#FF4F9A]/8">
+            <Link key={product.slug} href={`/products/${product.slug}`} onClick={closeSuggestions} className="flex items-center gap-3 rounded-md p-2 hover:bg-[#FF4F9A]/8">
               <span className="relative size-12 overflow-hidden rounded-md bg-[#FAFAFA]">
                 <Image src={product.images[0]?.url ?? "/logo.png.png"} alt={product.images[0]?.alt ?? product.name} fill sizes="48px" className="object-contain p-1" />
               </span>
