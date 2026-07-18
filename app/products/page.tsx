@@ -1,17 +1,15 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link"
 
 import { FilterSidebar } from "./FilterSidebar"
 import { ProductCard } from "./ProductCard"
-import { prisma } from "./prisma"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 type ProductsPageProps = {
-  searchParams: Promise<{
-    q?: string
-    brand?: string
-    category?: string
-    sort?: string
-  }>
+  searchParams: Promise<{ q?: string; brand?: string; category?: string; sort?: string }>
 }
 
 function sortOption(sort?: string) {
@@ -23,6 +21,7 @@ function sortOption(sort?: string) {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams
+  const { prisma } = await import("./prisma")
   const [brands, categories, products] = await Promise.all([
     prisma.brand.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
     prisma.category.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
@@ -66,7 +65,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             <button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-sm font-semibold text-white">Terapkan</button>
           </form>
         </div>
-
         <div className="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
           <FilterSidebar brands={brands} categories={categories} activeBrand={params.brand} activeCategory={params.category} />
           <section>
@@ -90,5 +88,3 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     </main>
   )
 }
-
-

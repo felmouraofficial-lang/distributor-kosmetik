@@ -1,13 +1,17 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation"
 
 import { ProductCard } from "../../products/ProductCard"
-import { prisma } from "../../products/prisma"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 type CategoryPageProps = { params: Promise<{ slug: string }> }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
+  const { prisma } = await import("../../products/prisma")
   const category = await prisma.category.findUnique({
     where: { slug },
     include: {
@@ -36,5 +40,3 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     </main>
   )
 }
-
-

@@ -1,11 +1,15 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image"
 import Link from "next/link"
 
 import { ProductCard } from "./products/ProductCard"
-import { prisma } from "./products/prisma"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 async function getHomeData() {
+  const { prisma } = await import("./products/prisma")
   const [categories, brands, flashSale, bestSellers, newArrivals, promos] = await Promise.all([
     prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
     prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
@@ -183,10 +187,11 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-10 max-w-7xl border-t border-[#222222]/8 pt-6 text-sm text-[#222222]/50">© 2026 Distributor Kosmetik. All rights reserved.</div>
+        <div className="mx-auto mt-10 max-w-7xl border-t border-[#222222]/8 pt-6 text-sm text-[#222222]/50">? 2026 Distributor Kosmetik. All rights reserved.</div>
       </footer>
     </main>
   )
 }
+
 
 

@@ -1,7 +1,10 @@
-﻿import { notFound } from "next/navigation"
+import { notFound } from "next/navigation"
 
-import { prisma } from "../prisma"
 import { ProductDetailClient } from "./ProductDetailClient"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>
@@ -9,6 +12,7 @@ type ProductDetailPageProps = {
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params
+  const { prisma } = await import("../prisma")
   const product = await prisma.product.findUnique({
     where: { slug },
     include: {

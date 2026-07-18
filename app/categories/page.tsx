@@ -1,9 +1,12 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link"
 
-import { prisma } from "../products/prisma"
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 export default async function CategoriesPage() {
+  const { prisma } = await import("../products/prisma")
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
     include: { _count: { select: { products: true } } },
@@ -24,5 +27,3 @@ export default async function CategoriesPage() {
     </main>
   )
 }
-
-
