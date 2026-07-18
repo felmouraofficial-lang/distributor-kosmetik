@@ -180,60 +180,61 @@ async function main() {
   const brandMap = new Map()
   const categoryMap = new Map()
 
-  await prisma.$transaction(async (tx) => {
-    for (const brand of brands) {
-      const saved = await tx.brand.upsert({ where: { slug: brand.slug }, update: brand, create: brand })
-      brandMap.set(brand.slug, saved)
-    }
+  for (const brand of brands) {
+    const saved = await prisma.brand.upsert({ where: { slug: brand.slug }, update: brand, create: brand })
+    brandMap.set(brand.slug, saved)
+  }
 
-    for (const category of categories) {
-      const saved = await tx.category.upsert({ where: { slug: category.slug }, update: category, create: category })
-      categoryMap.set(category.slug, saved)
-    }
+  for (const category of categories) {
+    const saved = await prisma.category.upsert({ where: { slug: category.slug }, update: category, create: category })
+    categoryMap.set(category.slug, saved)
+  }
 
-    for (const banner of banners) {
-      await tx.banner.upsert({ where: { slug: banner.slug }, update: banner, create: banner })
-    }
+  await prisma.$transaction(banners.map((banner) => prisma.banner.upsert({ where: { slug: banner.slug }, update: banner, create: banner })))
+  await prisma.$transaction(articles.map((article) => prisma.article.upsert({ where: { slug: article.slug }, update: article, create: article })))
 
-    for (const article of articles) {
-      await tx.article.upsert({ where: { slug: article.slug }, update: article, create: article })
-    }
+  for (const product of products) {
+    const brand = brandMap.get(product.brandSlug)
+    const category = categoryMap.get(product.categorySlug)
+    const productData = { ...product }
+    delete productData.brandSlug
+    delete productData.categorySlug
 
-    for (const product of products) {
-      const brand = brandMap.get(product.brandSlug)
-      const category = categoryMap.get(product.categorySlug)
-      const productData = { ...product }
-      delete productData.brandSlug
-      delete productData.categorySlug
+    const savedProduct = await prisma.product.upsert({
+      where: { slug: product.slug },
+      update: { ...productData, brandId: brand.id, categoryId: category.id },
+      create: { ...productData, brandId: brand.id, categoryId: category.id },
+    })
 
-      const savedProduct = await tx.product.upsert({
-        where: { slug: product.slug },
-        update: { ...productData, brandId: brand.id, categoryId: category.id },
-        create: { ...productData, brandId: brand.id, categoryId: category.id },
-      })
-
-      for (let sortOrder = 0; sortOrder < 2; sortOrder += 1) {
-        await tx.productImage.upsert({
+    await prisma.$transaction(
+      [0, 1].map((sortOrder) =>
+        prisma.productImage.upsert({
           where: { productId_sortOrder: { productId: savedProduct.id, sortOrder } },
           update: { url: LOCAL_IMAGE, alt: `${product.name} ${sortOrder === 0 ? "thumbnail" : "gallery"}`, sortOrder },
           create: { productId: savedProduct.id, url: LOCAL_IMAGE, alt: `${product.name} ${sortOrder === 0 ? "thumbnail" : "gallery"}`, sortOrder },
-        })
-      }
+        }),
+      ),
+    )
+  }
+
+  const reviewProducts = products.slice(0, 30)
+  for (let index = 0; index < reviewProducts.length; index += 1) {
+    const product = await prisma.product.findUnique({ where: { slug: reviewProducts[index].slug } })
+    const [name, rating, comment] = reviewTemplates[index % reviewTemplates.length]
+    const createdAt = new Date(`2026-07-${String((index % 20) + 1).padStart(2, "0")}T10:00:00.000Z`)
+
+    if (!product) {
+      throw new Error(`Seed product not found for review: ${reviewProducts[index].slug}`)
     }
 
-    const reviewProducts = products.slice(0, 30)
-    for (let index = 0; index < reviewProducts.length; index += 1) {
-      const product = await tx.product.findUnique({ where: { slug: reviewProducts[index].slug } })
-      const [name, rating, comment] = reviewTemplates[index % reviewTemplates.length]
-      const existingReview = await tx.review.findFirst({ where: { productId: product.id, name } })
+    const existingReview = await prisma.review.findFirst({ where: { productId: product.id, name } })
 
-      if (existingReview) {
-        await tx.review.update({ where: { id: existingReview.id }, data: { rating, comment, createdAt: new Date(`2026-07-${String((index % 20) + 1).padStart(2, "0")}T10:00:00.000Z`) } })
-      } else {
-        await tx.review.create({ data: { productId: product.id, name, rating, comment, createdAt: new Date(`2026-07-${String((index % 20) + 1).padStart(2, "0")}T10:00:00.000Z`) } })
-      }
+    if (existingReview) {
+      await prisma.review.update({ where: { id: existingReview.id }, data: { rating, comment, createdAt } })
+    } else {
+      await prisma.review.create({ data: { productId: product.id, name, rating, comment, createdAt } })
     }
-  })
+  }
 
   console.log("Seed completed: 10 brands, 8 categories, 40 products, 80 product images, 6 banners, 8 articles, 30 reviews.")
 }
