@@ -15,19 +15,20 @@ import {
 } from "@/components/ui/sheet"
 
 const navItems = [
-  { label: "Beranda", href: "#home" },
+  { label: "Skincare", href: "#skincare" },
+  { label: "Makeup", href: "#makeup" },
+  { label: "Bodycare", href: "#bodycare" },
+  { label: "Haircare", href: "#haircare" },
   { label: "Brand", href: "#brand" },
-  { label: "Kategori", href: "#kategori" },
-  { label: "Produk", href: "#produk" },
-  { label: "Artikel", href: "#artikel" },
+  { label: "Promo", href: "#promo" },
 ]
 
-const categories = ["Skincare", "Makeup", "Bodycare", "Haircare"]
+const quickCategories = ["Serum", "Sunscreen", "Lip Cream", "Toner", "Cleanser", "Body Lotion"]
 
 function BrandLogo() {
   return (
-    <Link href="#home" className="flex items-center gap-3" aria-label="Distributor Kosmetik home">
-      <span className="relative flex size-11 items-center justify-center overflow-hidden rounded-full border border-[#FF4F9A]/15 bg-white shadow-sm">
+    <Link href="/" className="flex items-center gap-3" aria-label="Distributor Kosmetik home">
+      <span className="relative flex size-11 items-center justify-center overflow-hidden rounded-full border border-[#FF4F9A]/15 bg-white">
         <Image
           src="/logo.png.png"
           alt="Distributor Kosmetik"
@@ -37,7 +38,7 @@ function BrandLogo() {
           priority
         />
       </span>
-      <span className="hidden text-sm font-semibold tracking-wide text-[#222222] sm:block">
+      <span className="hidden text-base font-semibold text-[#222222] sm:block">
         Distributor Kosmetik
       </span>
     </Link>
@@ -46,56 +47,32 @@ function BrandLogo() {
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-[#FF4F9A]/10 bg-white/78 backdrop-blur-xl supports-backdrop-filter:bg-white/70">
-      <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 border-b border-[#222222]/8 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/88">
+      <div className="bg-[#FF4F9A] px-4 py-2 text-center text-xs font-semibold text-white sm:text-sm">
+        Gratis konsultasi stok reseller dan promo grosir minggu ini
+      </div>
+
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <BrandLogo />
 
-        <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/78 transition hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]"
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div className="group relative">
-            <button className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/78 transition hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">
-              Dropdown Kategori
-            </button>
-            <div className="invisible absolute left-1/2 top-full mt-3 w-48 -translate-x-1/2 rounded-lg border border-[#FF4F9A]/10 bg-white p-2 opacity-0 shadow-xl shadow-[#FF4F9A]/10 transition group-hover:visible group-hover:opacity-100">
-              {categories.map((category) => (
-                <Link
-                  key={category}
-                  href="#kategori"
-                  className="block rounded-md px-3 py-2 text-sm text-[#222222]/75 hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]"
-                >
-                  {category}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        <div className="hidden w-60 items-center rounded-full border border-[#222222]/10 bg-white px-3 lg:flex">
-          <Search className="size-4 text-[#222222]/45" aria-hidden="true" />
+        <div className="hidden flex-1 items-center rounded-full border border-[#222222]/12 bg-white px-4 shadow-sm md:flex">
+          <Search className="size-5 text-[#222222]/45" aria-hidden="true" />
           <Input
-            aria-label="Cari produk"
-            placeholder="Cari produk"
-            className="h-10 border-0 px-2 shadow-none focus-visible:ring-0"
+            aria-label="Cari produk kosmetik"
+            placeholder="Cari serum, sunscreen, lip cream, brand..."
+            className="h-12 border-0 px-3 text-sm shadow-none focus-visible:ring-0"
           />
         </div>
 
-        <div className="ml-auto hidden items-center gap-2 md:flex lg:ml-0">
+        <div className="ml-auto hidden items-center gap-1 md:flex lg:ml-0">
           <Button variant="ghost" size="icon-lg" aria-label="Wishlist" className="rounded-full">
             <Heart className="size-5" />
           </Button>
           <Button variant="ghost" size="icon-lg" aria-label="Cart" className="rounded-full">
             <ShoppingBag className="size-5" />
           </Button>
-          <Button variant="outline" className="h-10 rounded-full px-4 text-[#222222]">
-            Login
+          <Button variant="ghost" size="icon-lg" aria-label="Akun" className="rounded-full">
+            <User className="size-5" />
           </Button>
           <Button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-white hover:bg-[#e94288]">
             Register
@@ -103,17 +80,17 @@ export function Navbar() {
         </div>
 
         <Sheet>
-          <SheetTrigger render={<Button variant="ghost" size="icon-lg" className="ml-auto rounded-full lg:hidden" aria-label="Buka menu" />}>
+          <SheetTrigger render={<Button variant="ghost" size="icon-lg" className="ml-auto rounded-full md:hidden" aria-label="Buka menu" />}>
             <Menu className="size-5" />
           </SheetTrigger>
           <SheetContent side="right" className="w-[88vw] bg-white">
             <SheetHeader>
-              <SheetTitle>Distributor Kosmetik</SheetTitle>
+              <SheetTitle>Belanja Kosmetik</SheetTitle>
             </SheetHeader>
             <div className="px-4">
-              <div className="mb-5 flex items-center rounded-full border border-[#222222]/10 px-3">
+              <div className="mb-5 flex items-center rounded-full border border-[#222222]/12 px-3">
                 <Search className="size-4 text-[#222222]/45" aria-hidden="true" />
-                <Input aria-label="Cari produk mobile" placeholder="Cari produk" className="h-10 border-0 focus-visible:ring-0" />
+                <Input aria-label="Cari produk mobile" placeholder="Cari produk" className="h-11 border-0 focus-visible:ring-0" />
               </div>
               <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
                 {navItems.map((item) => (
@@ -122,18 +99,31 @@ export function Navbar() {
                   </Link>
                 ))}
               </nav>
-              <div className="mt-6 grid grid-cols-2 gap-2">
-                <Button variant="outline" className="h-10 rounded-full">
-                  <User className="size-4" /> Login
-                </Button>
-                <Button className="h-10 rounded-full bg-[#FF4F9A] text-white hover:bg-[#e94288]">
-                  Register
-                </Button>
-              </div>
             </div>
           </SheetContent>
         </Sheet>
       </div>
+
+      <nav className="hidden border-t border-[#222222]/6 bg-white lg:block" aria-label="Category navigation">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-8 py-3">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/76 transition hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="ml-auto flex items-center gap-2 text-xs text-[#222222]/50">
+            {quickCategories.map((category) => (
+              <Link key={category} href="#produk" className="hover:text-[#FF4F9A]">
+                {category}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </nav>
     </header>
   )
 }
