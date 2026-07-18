@@ -1,7 +1,10 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server"
 
 import { prisma } from "../../products/prisma"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -9,28 +12,31 @@ export async function GET(request: Request) {
 
   if (!q) return NextResponse.json({ products: [] })
 
-  const products = await prisma.product.findMany({
-    where: {
-      isPublished: true,
-      name: { contains: q, mode: "insensitive" },
-    },
-    take: 6,
-    orderBy: { isFeatured: "desc" },
-    select: {
-      name: true,
-      slug: true,
-      price: true,
-      images: { orderBy: { sortOrder: "asc" }, take: 1, select: { url: true, alt: true } },
-      brand: { select: { name: true } },
-    },
-  })
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        isPublished: true,
+        name: { contains: q, mode: "insensitive" },
+      },
+      take: 6,
+      orderBy: { isFeatured: "desc" },
+      select: {
+        name: true,
+        slug: true,
+        price: true,
+        images: { orderBy: { sortOrder: "asc" }, take: 1, select: { url: true, alt: true } },
+        brand: { select: { name: true } },
+      },
+    })
 
-  return NextResponse.json({
-    products: products.map((product: any) => ({
-      ...product,
-      price: Number(product.price),
-    })),
-  })
+    return NextResponse.json({
+      products: products.map((product: any) => ({
+        ...product,
+        price: Number(product.price),
+      })),
+    })
+  } catch (error) {
+    console.error("Search API failed", error)
+    return NextResponse.json({ products: [] }, { status: 200 })
+  }
 }
-
-
