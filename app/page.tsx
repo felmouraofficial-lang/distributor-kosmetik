@@ -8,31 +8,35 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-async function getHomeData() {
-  const emptyHomeData = {
+function emptyHomeData() {
+  return {
     categories: [],
     brands: [],
     flashSale: [],
     bestSellers: [],
     newArrivals: [],
-    promos: [],
+    banners: [],
+    articles: [],
   }
+}
 
+async function getHomeData() {
   try {
     const { prisma } = await import("./products/prisma")
-    const [categories, brands, flashSale, bestSellers, newArrivals, promos] = await Promise.all([
+    const [categories, brands, flashSale, bestSellers, newArrivals, banners, articles] = await Promise.all([
       prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
       prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
       prisma.product.findMany({ where: { isPublished: true, isFlashSale: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
       prisma.product.findMany({ where: { isPublished: true, isFeatured: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
       prisma.product.findMany({ where: { isPublished: true, isNewArrival: true }, take: 4, include: productInclude(), orderBy: { createdAt: "desc" } }),
-      prisma.promo.findMany({ where: { isActive: true }, take: 2, orderBy: { updatedAt: "desc" } }),
+      prisma.banner.findMany({ where: { isActive: true, placement: "homepage" }, take: 3, orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }] }),
+      prisma.article.findMany({ where: { isPublished: true }, take: 3, orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }] }),
     ])
 
-    return { categories, brands, flashSale, bestSellers, newArrivals, promos }
+    return { categories, brands, flashSale, bestSellers, newArrivals, banners, articles }
   } catch (error) {
     console.error("Homepage data failed", error)
-    return emptyHomeData
+    return emptyHomeData()
   }
 }
 
@@ -57,7 +61,15 @@ function SectionHeader({ eyebrow, title, href = "/products" }: { eyebrow: string
   )
 }
 
-function ProductSection({ eyebrow, title, products }: { eyebrow: string; title: string; products: Awaited<ReturnType<typeof getHomeData>>["flashSale"] }) {
+function EmptyState({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="rounded-lg border border-[#222222]/8 bg-[#FAFAFA] p-8 text-center text-sm text-[#222222]/58">
+      {children}
+    </div>
+  )
+}
+
+function ProductSection({ eyebrow, title, products }: { eyebrow: string; title: string; products: any[] }) {
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <SectionHeader eyebrow={eyebrow} title={title} />
@@ -66,17 +78,16 @@ function ProductSection({ eyebrow, title, products }: { eyebrow: string; title: 
           {products.map((product: any) => <ProductCard key={product.slug} product={product} />)}
         </div>
       ) : (
-        <div className="rounded-lg border border-[#222222]/8 bg-[#FAFAFA] p-8 text-center text-sm text-[#222222]/58">
-          Produk belum tersedia. Tambahkan data produk melalui database/admin.
-        </div>
+        <EmptyState>Produk belum tersedia.</EmptyState>
       )}
     </section>
   )
 }
 
 export default async function HomePage() {
-  const { categories, brands, flashSale, bestSellers, newArrivals, promos } = await getHomeData()
-  const primaryPromo = promos[0]
+  const { categories, brands, flashSale, bestSellers, newArrivals, banners, articles } = await getHomeData()
+  const primaryBanner = banners[0]
+  const secondaryBanners = banners.slice(1, 3)
 
   return (
     <main className="min-h-screen bg-white">
@@ -92,25 +103,25 @@ export default async function HomePage() {
             )) : <p className="px-2 py-3 text-sm text-[#222222]/50">Kategori belum tersedia.</p>}
           </aside>
 
-          <Link href="/products" className="relative min-h-[320px] overflow-hidden rounded-lg border border-[#222222]/8 bg-[#FFF7FB] px-6 py-8 sm:px-10">
-            <div className="max-w-xl">
-              <p className="w-fit rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#FF4F9A] shadow-sm">
-                {primaryPromo?.title ?? "Promo Distributor Kosmetik"}
-              </p>
-              <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight text-[#222222] sm:text-5xl">
-                Belanja stok kosmetik original untuk toko dan reseller.
-              </h1>
-              <p className="mt-4 max-w-lg text-sm leading-6 text-[#222222]/62 sm:text-base">
-                {primaryPromo?.description ?? "Pilih produk fast moving, brand resmi, dan paket grosir dengan pengalaman belanja yang cepat dan rapi."}
-              </p>
-              <span className="mt-7 inline-flex h-11 items-center justify-center rounded-full bg-[#FF4F9A] px-6 text-sm font-semibold text-white">
-                Belanja Produk
-              </span>
+          {primaryBanner ? (
+            <Link href={primaryBanner.ctaHref ?? "/products"} className="relative min-h-[320px] overflow-hidden rounded-lg border border-[#222222]/8 bg-[#FFF7FB] px-6 py-8 sm:px-10">
+              <div className="max-w-xl">
+                {primaryBanner.subtitle ? <p className="w-fit rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#FF4F9A] shadow-sm">{primaryBanner.subtitle}</p> : null}
+                <h1 className="mt-5 max-w-2xl text-4xl font-semibold leading-tight text-[#222222] sm:text-5xl">{primaryBanner.title}</h1>
+                {primaryBanner.description ? <p className="mt-4 max-w-lg text-sm leading-6 text-[#222222]/62 sm:text-base">{primaryBanner.description}</p> : null}
+                {primaryBanner.ctaLabel ? <span className="mt-7 inline-flex h-11 items-center justify-center rounded-full bg-[#FF4F9A] px-6 text-sm font-semibold text-white">{primaryBanner.ctaLabel}</span> : null}
+              </div>
+              {primaryBanner.imageUrl ? (
+                <div className="absolute bottom-0 right-6 hidden h-64 w-56 lg:block">
+                  <Image src={primaryBanner.imageUrl} alt={primaryBanner.title} fill sizes="224px" className="object-contain object-bottom" priority />
+                </div>
+              ) : null}
+            </Link>
+          ) : (
+            <div className="flex min-h-[320px] items-center justify-center rounded-lg border border-[#222222]/8 bg-[#FAFAFA] px-6 text-center text-sm text-[#222222]/58">
+              Banner homepage belum tersedia.
             </div>
-            <div className="absolute bottom-0 right-6 hidden h-64 w-56 lg:block">
-              <Image src={primaryPromo?.imageUrl ?? "/logo.png.png"} alt={primaryPromo?.title ?? "Distributor Kosmetik"} fill sizes="224px" className="object-contain object-bottom" priority />
-            </div>
-          </Link>
+          )}
 
           <aside className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             <Link href="/products?sort=featured" className="rounded-lg border border-[#222222]/8 bg-white p-5 hover:border-[#FF4F9A]/35">
@@ -129,11 +140,9 @@ export default async function HomePage() {
 
       <section className="border-y border-[#222222]/8 bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 py-6 sm:grid-cols-4 lg:grid-cols-8 lg:px-8">
-          {categories.map((category: any) => (
-            <Link key={category.slug} href={`/categories/${category.slug}`} className="rounded-lg px-3 py-4 text-center text-sm font-semibold text-[#222222]/72 hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">
-              {category.name}
-            </Link>
-          ))}
+          {categories.length ? categories.map((category: any) => (
+            <Link key={category.slug} href={`/categories/${category.slug}`} className="rounded-lg px-3 py-4 text-center text-sm font-semibold text-[#222222]/72 hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">{category.name}</Link>
+          )) : <div className="col-span-full text-center text-sm text-[#222222]/50">Kategori belum tersedia.</div>}
         </div>
       </section>
 
@@ -142,29 +151,33 @@ export default async function HomePage() {
       <section id="brand" className="bg-[#FAFAFA] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Official Brand" title="Brand partner pilihan" href="/brands" />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {brands.map((brand: any) => (
-              <Link key={brand.slug} href={`/brands/${brand.slug}`} className="rounded-lg border border-[#222222]/8 bg-white px-5 py-6 text-center text-sm font-semibold text-[#222222]/72 hover:border-[#FF4F9A]/35 hover:text-[#FF4F9A]">
-                {brand.name}
-                <span className="mt-2 block text-xs font-normal text-[#222222]/45">{brand._count.products} produk</span>
-              </Link>
-            ))}
-          </div>
+          {brands.length ? (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {brands.map((brand: any) => (
+                <Link key={brand.slug} href={`/brands/${brand.slug}`} className="rounded-lg border border-[#222222]/8 bg-white px-5 py-6 text-center text-sm font-semibold text-[#222222]/72 hover:border-[#FF4F9A]/35 hover:text-[#FF4F9A]">
+                  {brand.name}
+                  <span className="mt-2 block text-xs font-normal text-[#222222]/45">{brand._count.products} produk</span>
+                </Link>
+              ))}
+            </div>
+          ) : <EmptyState>Brand belum tersedia.</EmptyState>}
         </div>
       </section>
 
       <ProductSection eyebrow="Best Seller" title="Produk paling sering dibeli" products={bestSellers} />
 
       <section id="promo" className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-2">
-          {(promos.length ? promos : [{ title: "Promo belum tersedia", description: "Tambahkan promo dari database/admin.", slug: "products" }]).map((promo: any) => (
-            <Link key={promo.slug} href="/products" className="rounded-lg border border-[#FF4F9A]/16 bg-[#FFF4F9] p-7">
-              <p className="text-sm font-semibold text-[#FF4F9A]">Promo</p>
-              <h2 className="mt-2 text-2xl font-semibold text-[#222222]">{promo.title}</h2>
-              <p className="mt-3 text-sm text-[#222222]/60">{promo.description}</p>
-            </Link>
-          ))}
-        </div>
+        {secondaryBanners.length ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            {secondaryBanners.map((banner: any) => (
+              <Link key={banner.slug} href={banner.ctaHref ?? "/products"} className="rounded-lg border border-[#FF4F9A]/16 bg-[#FFF4F9] p-7">
+                {banner.subtitle ? <p className="text-sm font-semibold text-[#FF4F9A]">{banner.subtitle}</p> : null}
+                <h2 className="mt-2 text-2xl font-semibold text-[#222222]">{banner.title}</h2>
+                {banner.description ? <p className="mt-3 text-sm text-[#222222]/60">{banner.description}</p> : null}
+              </Link>
+            ))}
+          </div>
+        ) : <EmptyState>Banner promo belum tersedia.</EmptyState>}
       </section>
 
       <ProductSection eyebrow="New Arrival" title="Produk terbaru minggu ini" products={newArrivals} />
@@ -172,15 +185,17 @@ export default async function HomePage() {
       <section id="artikel" className="bg-[#FAFAFA] py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Artikel" title="Insight belanja dan bisnis kosmetik" />
-          <div className="grid gap-4 md:grid-cols-3">
-            {["Cara memilih produk fast moving untuk toko kosmetik", "Checklist supplier kosmetik original untuk reseller", "Strategi promo bundling agar stok lebih cepat berputar"].map((article) => (
-              <article key={article} className="rounded-lg border border-[#222222]/8 bg-white p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#FF4F9A]">Panduan Reseller</p>
-                <h3 className="mt-3 text-lg font-semibold leading-7 text-[#222222]">{article}</h3>
-                <p className="mt-3 text-sm leading-6 text-[#222222]/60">Konten artikel akan masuk database pada modul content/admin berikutnya.</p>
-              </article>
-            ))}
-          </div>
+          {articles.length ? (
+            <div className="grid gap-4 md:grid-cols-3">
+              {articles.map((article: any) => (
+                <article key={article.slug} className="rounded-lg border border-[#222222]/8 bg-white p-6">
+                  {article.category ? <p className="text-xs font-semibold uppercase tracking-wide text-[#FF4F9A]">{article.category}</p> : null}
+                  <h3 className="mt-3 text-lg font-semibold leading-7 text-[#222222]">{article.title}</h3>
+                  {article.excerpt ? <p className="mt-3 text-sm leading-6 text-[#222222]/60">{article.excerpt}</p> : null}
+                </article>
+              ))}
+            </div>
+          ) : <EmptyState>Artikel belum tersedia.</EmptyState>}
         </div>
       </section>
 
@@ -206,7 +221,3 @@ export default async function HomePage() {
     </main>
   )
 }
-
-
-
-
