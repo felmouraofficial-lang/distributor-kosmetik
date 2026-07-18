@@ -21,8 +21,13 @@ function sortOption(sort?: string) {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams
-  const { prisma } = await import("./prisma")
-  const [brands, categories, products] = await Promise.all([
+  let brands: any[] = []
+  let categories: any[] = []
+  let products: any[] = []
+
+  try {
+    const { prisma } = await import("./prisma")
+    ;[brands, categories, products] = await Promise.all([
     prisma.brand.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
     prisma.category.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
     prisma.product.findMany({
@@ -41,6 +46,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       },
     }),
   ])
+  } catch (error) {
+    console.error("Products page data failed", error)
+  }
 
   return (
     <main className="bg-white">
@@ -88,3 +96,4 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     </main>
   )
 }
+

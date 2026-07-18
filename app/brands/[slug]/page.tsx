@@ -11,21 +11,27 @@ type BrandPageProps = { params: Promise<{ slug: string }> }
 
 export default async function BrandPage({ params }: BrandPageProps) {
   const { slug } = await params
-  const { prisma } = await import("../../products/prisma")
-  const brand = await prisma.brand.findUnique({
-    where: { slug },
-    include: {
-      products: {
-        where: { isPublished: true },
-        include: {
-          brand: { select: { name: true, slug: true } },
-          category: { select: { name: true, slug: true } },
-          images: { orderBy: { sortOrder: "asc" }, select: { url: true, alt: true } },
-          reviews: { select: { rating: true } },
+  let brand: any = null
+
+  try {
+    const { prisma } = await import("../../products/prisma")
+    brand = await prisma.brand.findUnique({
+      where: { slug },
+      include: {
+        products: {
+          where: { isPublished: true },
+          include: {
+            brand: { select: { name: true, slug: true } },
+            category: { select: { name: true, slug: true } },
+            images: { orderBy: { sortOrder: "asc" }, select: { url: true, alt: true } },
+            reviews: { select: { rating: true } },
+          },
         },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error("Brand detail data failed", error)
+  }
 
   if (!brand) notFound()
 

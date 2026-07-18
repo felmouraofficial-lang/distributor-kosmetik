@@ -11,21 +11,27 @@ type CategoryPageProps = { params: Promise<{ slug: string }> }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
-  const { prisma } = await import("../../products/prisma")
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    include: {
-      products: {
-        where: { isPublished: true },
-        include: {
-          brand: { select: { name: true, slug: true } },
-          category: { select: { name: true, slug: true } },
-          images: { orderBy: { sortOrder: "asc" }, select: { url: true, alt: true } },
-          reviews: { select: { rating: true } },
+  let category: any = null
+
+  try {
+    const { prisma } = await import("../../products/prisma")
+    category = await prisma.category.findUnique({
+      where: { slug },
+      include: {
+        products: {
+          where: { isPublished: true },
+          include: {
+            brand: { select: { name: true, slug: true } },
+            category: { select: { name: true, slug: true } },
+            images: { orderBy: { sortOrder: "asc" }, select: { url: true, alt: true } },
+            reviews: { select: { rating: true } },
+          },
         },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error("Category detail data failed", error)
+  }
 
   if (!category) notFound()
 

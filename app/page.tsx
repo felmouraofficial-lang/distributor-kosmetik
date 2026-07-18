@@ -9,17 +9,31 @@ export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 async function getHomeData() {
-  const { prisma } = await import("./products/prisma")
-  const [categories, brands, flashSale, bestSellers, newArrivals, promos] = await Promise.all([
-    prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
-    prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
-    prisma.product.findMany({ where: { isPublished: true, isFlashSale: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
-    prisma.product.findMany({ where: { isPublished: true, isFeatured: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
-    prisma.product.findMany({ where: { isPublished: true, isNewArrival: true }, take: 4, include: productInclude(), orderBy: { createdAt: "desc" } }),
-    prisma.promo.findMany({ where: { isActive: true }, take: 2, orderBy: { updatedAt: "desc" } }),
-  ])
+  const emptyHomeData = {
+    categories: [],
+    brands: [],
+    flashSale: [],
+    bestSellers: [],
+    newArrivals: [],
+    promos: [],
+  }
 
-  return { categories, brands, flashSale, bestSellers, newArrivals, promos }
+  try {
+    const { prisma } = await import("./products/prisma")
+    const [categories, brands, flashSale, bestSellers, newArrivals, promos] = await Promise.all([
+      prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
+      prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
+      prisma.product.findMany({ where: { isPublished: true, isFlashSale: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
+      prisma.product.findMany({ where: { isPublished: true, isFeatured: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
+      prisma.product.findMany({ where: { isPublished: true, isNewArrival: true }, take: 4, include: productInclude(), orderBy: { createdAt: "desc" } }),
+      prisma.promo.findMany({ where: { isActive: true }, take: 2, orderBy: { updatedAt: "desc" } }),
+    ])
+
+    return { categories, brands, flashSale, bestSellers, newArrivals, promos }
+  } catch (error) {
+    console.error("Homepage data failed", error)
+    return emptyHomeData
+  }
 }
 
 function productInclude() {
@@ -192,6 +206,7 @@ export default async function HomePage() {
     </main>
   )
 }
+
 
 
 
