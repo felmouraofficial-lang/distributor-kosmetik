@@ -27,7 +27,7 @@ async function getHomeData() {
       prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
       prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
       prisma.product.findMany({ where: { isPublished: true, isFlashSale: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
-      prisma.product.findMany({ where: { isPublished: true, isFeatured: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
+      prisma.product.findMany({ where: { isPublished: true, isBestSeller: true }, take: 4, include: productInclude(), orderBy: { updatedAt: "desc" } }),
       prisma.product.findMany({ where: { isPublished: true, isNewArrival: true }, take: 4, include: productInclude(), orderBy: { createdAt: "desc" } }),
       prisma.banner.findMany({ where: { isActive: true, placement: "homepage" }, take: 3, orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }] }),
       prisma.article.findMany({ where: { isPublished: true }, take: 3, orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }] }),
@@ -221,3 +221,4 @@ export default async function HomePage() {
     </main>
   )
 }
+
