@@ -1,14 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "@/app/prisma"
 import { deleteProduct, saveProduct } from "../actions"
 import { AdminCard, buttonClass, Checkbox, dangerClass, Field, inputClass, PageHeader, textareaClass } from "../ui"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function ProductsAdminPage() {
-  const [products, brands, categories] = await Promise.all([
-    prisma.product.findMany({ include: { brand: true, category: true }, orderBy: [{ updatedAt: "desc" }] }),
-    prisma.brand.findMany({ orderBy: { name: "asc" } }),
-    prisma.category.findMany({ orderBy: { name: "asc" } }),
-  ])
+  let products: any[] = []
+  let brands: any[] = []
+  let categories: any[] = []
+
+  try {
+    const { prisma } = await import("@/app/prisma")
+    ;[products, brands, categories] = await Promise.all([
+      prisma.product.findMany({ include: { brand: true, category: true }, orderBy: [{ updatedAt: "desc" }] }),
+      prisma.brand.findMany({ orderBy: { name: "asc" } }),
+      prisma.category.findMany({ orderBy: { name: "asc" } }),
+    ])
+  } catch (error) {
+    console.error("Admin products data failed", error)
+  }
 
   return (
     <>
@@ -83,5 +95,8 @@ export default async function ProductsAdminPage() {
     </>
   )
 }
+
+
+
 
 

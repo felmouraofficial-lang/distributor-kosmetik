@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "@/app/prisma"
 import { deleteBanner, saveBanner } from "../actions"
 import { AdminCard, buttonClass, Checkbox, dangerClass, Field, inputClass, PageHeader, textareaClass } from "../ui"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function BannersAdminPage() {
-  const banners = await prisma.banner.findMany({ orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }] })
+  let banners: any[] = []
+  try {
+    const { prisma } = await import("@/app/prisma")
+    banners = await prisma.banner.findMany({ orderBy: [{ sortOrder: "asc" }, { updatedAt: "desc" }] })
+  } catch (error) {
+    console.error("Admin banners data failed", error)
+  }
 
   return (
     <>
@@ -50,4 +59,6 @@ export default async function BannersAdminPage() {
     </>
   )
 }
+
+
 

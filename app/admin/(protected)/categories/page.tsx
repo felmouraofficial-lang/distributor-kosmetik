@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "@/app/prisma"
 import { deleteCategory, saveCategory } from "../actions"
 import { AdminCard, buttonClass, dangerClass, Field, inputClass, PageHeader, textareaClass } from "../ui"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function CategoriesAdminPage() {
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } })
+  let categories: any[] = []
+  try {
+    const { prisma } = await import("@/app/prisma")
+    categories = await prisma.category.findMany({ orderBy: { name: "asc" } })
+  } catch (error) {
+    console.error("Admin categories data failed", error)
+  }
 
   return (
     <>
@@ -36,4 +45,6 @@ export default async function CategoriesAdminPage() {
     </>
   )
 }
+
+
 

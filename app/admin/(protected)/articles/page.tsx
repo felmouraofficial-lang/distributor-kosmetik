@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "@/app/prisma"
 import { deleteArticle, saveArticle } from "../actions"
 import { AdminCard, buttonClass, Checkbox, dangerClass, Field, inputClass, PageHeader, textareaClass } from "../ui"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function ArticlesAdminPage() {
-  const articles = await prisma.article.findMany({ orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }] })
+  let articles: any[] = []
+  try {
+    const { prisma } = await import("@/app/prisma")
+    articles = await prisma.article.findMany({ orderBy: [{ publishedAt: "desc" }, { updatedAt: "desc" }] })
+  } catch (error) {
+    console.error("Admin articles data failed", error)
+  }
 
   return (
     <>
@@ -47,4 +56,6 @@ export default async function ArticlesAdminPage() {
     </>
   )
 }
+
+
 

@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
-import { prisma } from "@/app/prisma"
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key)
@@ -29,12 +28,18 @@ async function fileToDataUrl(file: File | null) {
   return `data:${file.type || "application/octet-stream"};base64,${buffer.toString("base64")}`
 }
 
+async function getPrisma() {
+  const { prisma } = await import("@/app/prisma")
+  return prisma
+}
+
 async function imageValue(formData: FormData, fileKey: string, urlKey: string) {
   const uploaded = await fileToDataUrl(formData.get(fileKey) as File | null)
   return uploaded ?? text(formData, urlKey)
 }
 
 export async function saveBrand(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   const name = text(formData, "name") ?? "Untitled Brand"
   const data = {
@@ -53,6 +58,7 @@ export async function saveBrand(formData: FormData) {
 }
 
 export async function deleteBrand(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   if (id) await prisma.brand.delete({ where: { id } })
   revalidatePath("/admin/brands")
@@ -60,6 +66,7 @@ export async function deleteBrand(formData: FormData) {
 }
 
 export async function saveCategory(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   const name = text(formData, "name") ?? "Untitled Category"
   const parentId = text(formData, "parentId")
@@ -78,6 +85,7 @@ export async function saveCategory(formData: FormData) {
 }
 
 export async function deleteCategory(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   if (id) await prisma.category.delete({ where: { id } })
   revalidatePath("/admin/categories")
@@ -85,6 +93,7 @@ export async function deleteCategory(formData: FormData) {
 }
 
 export async function saveBanner(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   const title = text(formData, "title") ?? "Untitled Banner"
   const data = {
@@ -108,6 +117,7 @@ export async function saveBanner(formData: FormData) {
 }
 
 export async function deleteBanner(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   if (id) await prisma.banner.delete({ where: { id } })
   revalidatePath("/admin/banners")
@@ -115,6 +125,7 @@ export async function deleteBanner(formData: FormData) {
 }
 
 export async function saveArticle(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   const title = text(formData, "title") ?? "Untitled Article"
   const publishedAt = text(formData, "publishedAt")
@@ -138,6 +149,7 @@ export async function saveArticle(formData: FormData) {
 }
 
 export async function deleteArticle(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   if (id) await prisma.article.delete({ where: { id } })
   revalidatePath("/admin/articles")
@@ -145,6 +157,7 @@ export async function deleteArticle(formData: FormData) {
 }
 
 export async function saveProduct(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   const name = text(formData, "name") ?? "Untitled Product"
   const thumbnail = await imageValue(formData, "thumbnailFile", "thumbnail")
@@ -197,8 +210,11 @@ export async function saveProduct(formData: FormData) {
 }
 
 export async function deleteProduct(formData: FormData) {
+  const prisma = await getPrisma()
   const id = text(formData, "id")
   if (id) await prisma.product.delete({ where: { id } })
   revalidatePath("/admin/products")
   redirect("/admin/products")
 }
+
+

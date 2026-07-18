@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { prisma } from "@/app/prisma"
 import { deleteBrand, saveBrand } from "../actions"
 import { AdminCard, buttonClass, Checkbox, dangerClass, Field, inputClass, PageHeader, textareaClass } from "../ui"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export default async function BrandsAdminPage() {
-  const brands = await prisma.brand.findMany({ orderBy: { name: "asc" } })
+  let brands: any[] = []
+  try {
+    const { prisma } = await import("@/app/prisma")
+    brands = await prisma.brand.findMany({ orderBy: { name: "asc" } })
+  } catch (error) {
+    console.error("Admin brands data failed", error)
+  }
 
   return (
     <>
@@ -40,4 +49,6 @@ export default async function BrandsAdminPage() {
     </>
   )
 }
+
+
 
