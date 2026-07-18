@@ -9,7 +9,7 @@ export default async function BrandsPage() {
   let brands: any[] = []
 
   try {
-    const { prisma } = await import("../products/prisma")
+    const { prisma } = await import("../../prisma")
     brands = await prisma.brand.findMany({
       orderBy: { name: "asc" },
       include: { _count: { select: { products: true } } },
@@ -37,3 +37,4 @@ export default async function BrandsPage() {
     </main>
   )
 }
+

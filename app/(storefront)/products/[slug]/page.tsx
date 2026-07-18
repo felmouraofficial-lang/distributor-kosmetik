@@ -16,7 +16,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   let relatedProducts = []
 
   try {
-    const { prisma } = await import("../prisma")
+    const { prisma } = await import("../../../prisma")
     product = await prisma.product.findUnique({
       where: { slug },
       include: {
@@ -52,3 +52,4 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   return <ProductDetailClient product={product} relatedProducts={relatedProducts} />
 }
+

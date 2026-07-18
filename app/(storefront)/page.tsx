@@ -22,7 +22,7 @@ function emptyHomeData() {
 
 async function getHomeData() {
   try {
-    const { prisma } = await import("./products/prisma")
+    const { prisma } = await import("../prisma")
     const [categories, brands, flashSale, bestSellers, newArrivals, banners, articles] = await Promise.all([
       prisma.category.findMany({ orderBy: { name: "asc" }, take: 8, include: { _count: { select: { products: true } } } }),
       prisma.brand.findMany({ orderBy: { name: "asc" }, take: 6, include: { _count: { select: { products: true } } } }),
@@ -216,9 +216,12 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-10 max-w-7xl border-t border-[#222222]/8 pt-6 text-sm text-[#222222]/50">? 2026 Distributor Kosmetik. All rights reserved.</div>
+        <div className="mx-auto mt-10 max-w-7xl border-t border-[#222222]/8 pt-6 text-sm text-[#222222]/50">&copy; 2026 Distributor Kosmetik. All rights reserved.</div>
       </footer>
     </main>
   )
 }
+
+
+
 

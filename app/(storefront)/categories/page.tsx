@@ -9,7 +9,7 @@ export default async function CategoriesPage() {
   let categories: any[] = []
 
   try {
-    const { prisma } = await import("../products/prisma")
+    const { prisma } = await import("../../prisma")
     categories = await prisma.category.findMany({
       orderBy: { name: "asc" },
       include: { _count: { select: { products: true } } },
@@ -37,3 +37,4 @@ export default async function CategoriesPage() {
     </main>
   )
 }
+

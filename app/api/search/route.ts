@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   if (!q) return NextResponse.json({ products: [] })
 
   try {
-    const { prisma } = await import("../../products/prisma")
+    const { prisma } = await import("../../prisma")
     const products = await prisma.product.findMany({
       where: {
         isPublished: true,
@@ -40,3 +40,5 @@ export async function GET(request: Request) {
     return NextResponse.json({ products: [] }, { status: 200 })
   }
 }
+
+

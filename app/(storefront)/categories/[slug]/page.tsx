@@ -7,15 +7,15 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-type BrandPageProps = { params: Promise<{ slug: string }> }
+type CategoryPageProps = { params: Promise<{ slug: string }> }
 
-export default async function BrandPage({ params }: BrandPageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params
-  let brand: any = null
+  let category: any = null
 
   try {
-    const { prisma } = await import("../../products/prisma")
-    brand = await prisma.brand.findUnique({
+    const { prisma } = await import("../../../prisma")
+    category = await prisma.category.findUnique({
       where: { slug },
       include: {
         products: {
@@ -30,19 +30,20 @@ export default async function BrandPage({ params }: BrandPageProps) {
       },
     })
   } catch (error) {
-    console.error("Brand detail data failed", error)
+    console.error("Category detail data failed", error)
   }
 
-  if (!brand) notFound()
+  if (!category) notFound()
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <p className="text-sm font-semibold text-[#FF4F9A]">Official Brand</p>
-      <h1 className="mt-1 text-3xl font-semibold text-[#222222]">{brand.name}</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-[#222222]/60">{brand.description ?? "Brand resmi dengan produk kosmetik original untuk reseller."}</p>
+      <p className="text-sm font-semibold text-[#FF4F9A]">Category Page</p>
+      <h1 className="mt-1 text-3xl font-semibold text-[#222222]">{category.name}</h1>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-[#222222]/60">{category.description ?? "Kategori produk kosmetik original untuk pengalaman belanja reseller."}</p>
       <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {brand.products.map((product: any) => <ProductCard key={product.slug} product={product} />)}
+        {category.products.map((product: any) => <ProductCard key={product.slug} product={product} />)}
       </div>
     </main>
   )
 }
+

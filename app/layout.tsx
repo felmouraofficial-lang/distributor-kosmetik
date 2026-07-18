@@ -1,5 +1,4 @@
-﻿import type { Metadata } from "next"
-import { Navbar } from "@/components/ui/Navbar"
+import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -22,10 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="h-full scroll-smooth antialiased">
-      <body className="min-h-full bg-white text-[#222222]">
-        <Navbar />
-        {children}
-      </body>
+      <body className="min-h-full bg-white text-[#222222]">{children}</body>
     </html>
   )
 }

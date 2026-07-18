@@ -26,7 +26,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   let products: any[] = []
 
   try {
-    const { prisma } = await import("./prisma")
+    const { prisma } = await import("../../prisma")
     ;[brands, categories, products] = await Promise.all([
     prisma.brand.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
     prisma.category.findMany({ orderBy: { name: "asc" }, select: { name: true, slug: true } }),
@@ -96,4 +96,5 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     </main>
   )
 }
+
 
