@@ -117,19 +117,31 @@ function SearchAutocomplete() {
 }
 
 export function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 8)
+    }
+
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[#222222]/8 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/88">
-      <div className="bg-[#FF4F9A] px-4 py-2 text-center text-xs font-semibold text-white sm:text-sm">
-        Gratis konsultasi stok reseller dan promo grosir minggu ini
+    <header className={`sticky top-0 z-50 border-b border-[#222222]/8 bg-white/96 backdrop-blur transition-shadow supports-backdrop-filter:bg-white/90 ${scrolled ? "shadow-lg shadow-[#222222]/8" : "shadow-none"}`}>
+      <div className="bg-[#FF4F9A] px-4 py-2 text-center text-xs font-bold text-white sm:text-sm">
+        Diskon reseller minggu ini + konsultasi stok gratis
       </div>
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <BrandLogo />
         <SearchAutocomplete />
         <div className="ml-auto hidden items-center gap-1 md:flex lg:ml-0">
           <Button variant="ghost" size="icon-lg" aria-label="Wishlist" className="rounded-full"><Heart className="size-5" /></Button>
           <Button variant="ghost" size="icon-lg" aria-label="Cart" className="rounded-full"><ShoppingBag className="size-5" /></Button>
           <Button variant="ghost" size="icon-lg" aria-label="Akun" className="rounded-full"><User className="size-5" /></Button>
-          <Button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-white hover:bg-[#e94288]">Register</Button>
+          <Button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-white hover:bg-[#e94288]">Masuk</Button>
         </div>
         <Sheet>
           <SheetTrigger render={<Button variant="ghost" size="icon-lg" className="ml-auto rounded-full md:hidden" aria-label="Buka menu" />}><Menu className="size-5" /></SheetTrigger>
@@ -148,7 +160,7 @@ export function Navbar() {
         </Sheet>
       </div>
       <nav className="hidden border-t border-[#222222]/6 bg-white lg:block" aria-label="Category navigation">
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-8 py-3">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-8 py-2.5">
           {navItems.map((item) => <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/76 transition hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">{item.label}</Link>)}
         </div>
       </nav>

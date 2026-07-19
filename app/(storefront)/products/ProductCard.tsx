@@ -10,6 +10,8 @@ type ProductCardProduct = {
   price: unknown
   compareAtPrice: unknown | null
   stock: number
+  minOrder: number
+  isNewArrival?: boolean
   brand: { name: string; slug: string }
   category: { name: string; slug: string }
   images: { url: string; alt: string | null }[]
@@ -37,6 +39,11 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
               -{discount}%
             </span>
           ) : null}
+          {product.isNewArrival ? (
+            <span className="absolute bottom-2 left-2 z-10 rounded-full bg-white px-2 py-1 text-[11px] font-bold text-[#FF4F9A] shadow-sm">
+              Baru
+            </span>
+          ) : null}
           {product.stock > 0 ? (
             <span className="absolute left-2 top-2 z-10 rounded-full bg-[#2BB673] px-2 py-1 text-[11px] font-semibold text-white">
               Ready
@@ -60,12 +67,13 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
           <Star className="size-3.5 fill-[#FFB547] text-[#FFB547]" />
           <span>{averageRating(product.reviews)}</span>
           <span>•</span>
-          <span>{product.category.name}</span>
+          <span>{product.reviews.length} review</span>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <p className="text-base font-bold text-[#FF4F9A]">{formatRupiah(price)}</p>
           {compareAtPrice ? <p className="text-xs text-[#222222]/38 line-through">{formatRupiah(compareAtPrice)}</p> : null}
         </div>
+        <p className="mt-2 text-xs text-[#222222]/48">Min. {product.minOrder} pcs • Stok {product.stock} pcs</p>
       </Link>
       <div className="mt-3 grid grid-cols-[1fr_38px] gap-2">
         <button className="h-9 rounded-full bg-[#FF4F9A] text-xs font-semibold text-white transition hover:bg-[#e94288]">

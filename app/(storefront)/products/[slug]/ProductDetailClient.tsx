@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, Minus, Plus, Search, ShieldCheck, ShoppingBag, Star, Store } from "lucide-react"
+import { Gift, Heart, Minus, Plus, Search, ShieldCheck, ShoppingBag, Star, Store, Truck } from "lucide-react"
 
 import { formatRupiah } from "../format"
 import { ProductCard } from "../ProductCard"
@@ -116,6 +116,14 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
             </div>
             <p className="mt-6 leading-7 text-[#222222]/68">{product.shortDescription ?? product.description ?? "Produk kosmetik original untuk kebutuhan reseller dan toko kosmetik."}</p>
 
+            <div className="mt-6 rounded-2xl bg-[#FFF4F9] p-4">
+              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Gift className="size-5 text-[#FF4F9A]" /> Voucher tersedia</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <div className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#222222]">Diskon grosir reseller</div>
+                <div className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#222222]">Gratis ongkir area tertentu</div>
+              </div>
+            </div>
+
             <div className="mt-6 border-y border-[#222222]/8 py-5">
               <p className="text-sm font-semibold text-[#222222]">Jumlah</p>
               <div className="mt-3 flex flex-wrap items-center gap-4">
@@ -128,13 +136,20 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_52px]">
+            <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_52px]">
               <button className="h-12 rounded-full bg-[#FF4F9A] text-sm font-semibold text-white hover:bg-[#e94288]">
                 <ShoppingBag className="mr-2 inline size-5" /> Tambah ke Keranjang
+              </button>
+              <button className="h-12 rounded-full border border-[#FF4F9A] bg-white text-sm font-semibold text-[#FF4F9A] hover:bg-[#FFF4F9]">
+                Beli Sekarang
               </button>
               <button onClick={toggleWishlist} className={`flex h-12 items-center justify-center rounded-full border ${wishlisted ? "border-[#FF4F9A] text-[#FF4F9A]" : "border-[#222222]/12 text-[#222222]/65"}`} aria-label="Wishlist">
                 <Heart className={wishlisted ? "size-5 fill-[#FF4F9A]" : "size-5"} />
               </button>
+            </div>
+            <div className="mt-5 rounded-2xl border border-[#222222]/8 p-4">
+              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Truck className="size-5 text-[#FF4F9A]" /> Info Pengiriman</p>
+              <p className="mt-2 text-sm leading-6 text-[#222222]/60">Pengiriman reseller diproses dari gudang distributor. Estimasi dan ongkir mengikuti alamat tujuan.</p>
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <div className="rounded-lg border border-[#222222]/8 p-4 text-sm font-semibold text-[#222222]"><ShieldCheck className="mb-2 size-5 text-[#2BB673]" />Original</div>
@@ -208,6 +223,10 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
           </div>
         </div>
       ) : null}
+      <div className="fixed inset-x-0 bottom-[64px] z-40 grid grid-cols-2 gap-2 border-t border-[#222222]/8 bg-white p-3 shadow-[0_-12px_30px_rgba(34,34,34,0.10)] md:hidden">
+        <button className="h-11 rounded-full border border-[#FF4F9A] text-sm font-bold text-[#FF4F9A]">Keranjang</button>
+        <button className="h-11 rounded-full bg-[#FF4F9A] text-sm font-bold text-white">Beli Sekarang</button>
+      </div>
     </main>
   )
 }
