@@ -16,7 +16,7 @@ export function BottomNavigation() {
         {navItems.map((item) => {
           const Icon = item.icon
           return (
-            <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold text-[#222222]/60 hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">
+            <Link key={item.label} href={item.href} className="flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold text-[#222222]/60 hover:bg-[#7C3FB3]/8 hover:text-[#7C3FB3]">
               <Icon className="size-5" />
               {item.label}
             </Link>

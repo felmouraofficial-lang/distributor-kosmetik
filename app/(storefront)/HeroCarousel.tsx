@@ -44,28 +44,21 @@ export function HeroCarousel({ banners }: { banners: Banner[] }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
-      <div className="relative min-h-[430px] overflow-hidden rounded-3xl bg-[#FFF4F9] shadow-xl shadow-[#FF4F9A]/10 sm:min-h-[520px]">
-        <Image src={slide.imageUrl ?? "/logo.png.png"} alt={slide.title} fill sizes="100vw" className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/18 to-transparent" />
-        <div className="relative z-10 flex min-h-[430px] max-w-2xl flex-col justify-center px-6 py-8 sm:min-h-[520px] sm:px-10 lg:px-14">
-          {slide.subtitle ? <p className="w-fit rounded-full bg-white/95 px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#FF4F9A] shadow-sm">{slide.subtitle}</p> : null}
-          <h1 className="mt-5 text-4xl font-bold leading-tight text-white drop-shadow-sm sm:text-6xl">{slide.title}</h1>
-          {slide.description ? <p className="mt-5 max-w-lg text-base leading-7 text-white/88 sm:text-lg">{slide.description}</p> : null}
-          <Link href={slide.ctaHref ?? "/products"} className="mt-8 inline-flex h-12 w-fit items-center justify-center rounded-full bg-[#FF4F9A] px-8 text-sm font-bold text-white shadow-lg shadow-[#FF4F9A]/25 transition hover:bg-[#e94288]">
-            {slide.ctaLabel ?? "Belanja Sekarang"}
-          </Link>
-        </div>
+      <div className="relative overflow-hidden rounded-[28px] bg-white shadow-xl shadow-[#7C3FB3]/10">
+        <Link href={slide.ctaHref ?? "/products"} className="relative block aspect-[16/7] min-h-[260px] sm:aspect-[16/6] lg:aspect-[16/5]" aria-label={slide.title}>
+          <Image src={slide.imageUrl ?? "/logo.png.png"} alt={slide.title} fill sizes="100vw" className="object-cover" priority />
+        </Link>
 
-        <button onClick={() => goTo(active - 1)} className="absolute left-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#222222] shadow-md transition hover:text-[#FF4F9A] sm:flex" aria-label="Banner sebelumnya">
+        <button onClick={() => goTo(active - 1)} className="absolute left-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-[#222222] shadow-md transition hover:text-[#7C3FB3] sm:flex" aria-label="Banner sebelumnya">
           <ChevronLeft className="size-5" />
         </button>
-        <button onClick={() => goTo(active + 1)} className="absolute right-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#222222] shadow-md transition hover:text-[#FF4F9A] sm:flex" aria-label="Banner berikutnya">
+        <button onClick={() => goTo(active + 1)} className="absolute right-4 top-1/2 z-20 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-[#222222] shadow-md transition hover:text-[#7C3FB3] sm:flex" aria-label="Banner berikutnya">
           <ChevronRight className="size-5" />
         </button>
 
         <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
           {slides.map((item, index) => (
-            <button key={item.slug} onClick={() => goTo(index)} className={`h-2 rounded-full transition ${active === index ? "w-8 bg-[#FF4F9A]" : "w-2 bg-white/75"}`} aria-label={`Lihat banner ${index + 1}`} />
+            <button key={item.slug} onClick={() => goTo(index)} className={`h-2 rounded-full transition ${active === index ? "w-8 bg-[#7C3FB3]" : "w-2 bg-white/80"}`} aria-label={`Lihat banner ${index + 1}`} />
           ))}
         </div>
       </div>

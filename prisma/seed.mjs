@@ -12,6 +12,7 @@ const prisma = new PrismaClient({
 })
 
 const LOCAL_IMAGE = "/logo.png.png"
+const HEAD_BANNERS = ["/head-banner-testimonials.webp", "/head-banner-flash-sale.webp", "/head-banner-benefits.webp"]
 
 const brands = [
   ["Wardah", "wardah", "Brand kosmetik halal Indonesia dengan rangkaian skincare dan makeup yang kuat untuk pasar mass premium."],
@@ -44,7 +45,7 @@ const banners = [
   ["Promo Mingguan", "promo-mingguan", "Promo mingguan khusus pembelian grosir", "Promo Mingguan", "Paket bundling untuk reseller aktif dengan margin lebih sehat.", "/products", "Ambil Promo", 4],
   ["New Arrival", "new-arrival", "Produk terbaru siap masuk katalog toko", "New Arrival", "Update stok produk baru dari brand pilihan agar toko selalu segar.", "/products?sort=newest", "Cek Produk Baru", 5],
   ["Official Brand", "official-brand", "Belanja dari official brand dan supplier terpercaya", "Official Brand", "Semua data brand siap dikelola dari dashboard admin tanpa ubah kode.", "/brands", "Jelajahi Brand", 6],
-].map(([, slug, title, subtitle, description, ctaHref, ctaLabel, sortOrder]) => ({
+].map(([, slug, title, subtitle, description, ctaHref, ctaLabel, sortOrder], index) => ({
   placement: "homepage",
   slug,
   title,
@@ -53,7 +54,7 @@ const banners = [
   ctaHref,
   ctaLabel,
   sortOrder,
-  imageUrl: LOCAL_IMAGE,
+  imageUrl: HEAD_BANNERS[index] ?? LOCAL_IMAGE,
   isActive: true,
 }))
 

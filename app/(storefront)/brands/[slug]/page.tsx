@@ -37,7 +37,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <p className="text-sm font-semibold text-[#FF4F9A]">Official Brand</p>
+      <p className="text-sm font-semibold text-[#7C3FB3]">Official Brand</p>
       <h1 className="mt-1 text-3xl font-semibold text-[#222222]">{brand.name}</h1>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-[#222222]/60">{brand.description ?? "Brand resmi dengan produk kosmetik original untuk reseller."}</p>
       <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">

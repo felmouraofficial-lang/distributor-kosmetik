@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
@@ -35,7 +35,7 @@ type SearchProduct = {
 function BrandLogo() {
   return (
     <Link href="/" className="flex items-center gap-3" aria-label="Distributor Kosmetik home">
-      <span className="relative flex size-11 items-center justify-center overflow-hidden rounded-full border border-[#FF4F9A]/15 bg-white">
+      <span className="relative flex size-11 items-center justify-center overflow-hidden rounded-full border border-[#7C3FB3]/15 bg-white">
         <Image src="/logo.png.png" alt="Distributor Kosmetik" fill sizes="44px" className="object-contain p-1" priority />
       </span>
       <span className="hidden text-base font-semibold text-[#222222] sm:block">Distributor Kosmetik</span>
@@ -99,7 +99,7 @@ function SearchAutocomplete() {
       {products.length ? (
         <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 rounded-lg border border-[#222222]/8 bg-white p-2 shadow-xl shadow-[#222222]/10">
           {products.map((product) => (
-            <Link key={product.slug} href={`/products/${product.slug}`} onClick={closeSuggestions} className="flex items-center gap-3 rounded-md p-2 hover:bg-[#FF4F9A]/8">
+            <Link key={product.slug} href={`/products/${product.slug}`} onClick={closeSuggestions} className="flex items-center gap-3 rounded-md p-2 hover:bg-[#7C3FB3]/8">
               <span className="relative size-12 overflow-hidden rounded-md bg-[#FAFAFA]">
                 <Image src={product.images[0]?.url ?? "/logo.png.png"} alt={product.images[0]?.alt ?? product.name} fill sizes="48px" className="object-contain p-1" />
               </span>
@@ -107,7 +107,7 @@ function SearchAutocomplete() {
                 <span className="block truncate text-sm font-semibold text-[#222222]">{product.name}</span>
                 <span className="text-xs text-[#222222]/50">{product.brand.name}</span>
               </span>
-              <span className="text-sm font-semibold text-[#FF4F9A]">Rp {product.price.toLocaleString("id-ID")}</span>
+              <span className="text-sm font-semibold text-[#7C3FB3]">Rp {product.price.toLocaleString("id-ID")}</span>
             </Link>
           ))}
         </div>
@@ -131,7 +131,7 @@ export function Navbar() {
 
   return (
     <header className={`sticky top-0 z-50 border-b border-[#222222]/8 bg-white/96 backdrop-blur transition-shadow supports-backdrop-filter:bg-white/90 ${scrolled ? "shadow-lg shadow-[#222222]/8" : "shadow-none"}`}>
-      <div className="bg-[#FF4F9A] px-4 py-2 text-center text-xs font-bold text-white sm:text-sm">
+      <div className="bg-[#7C3FB3] px-4 py-2 text-center text-xs font-bold text-white sm:text-sm">
         Diskon reseller minggu ini + konsultasi stok gratis
       </div>
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -141,7 +141,7 @@ export function Navbar() {
           <Button variant="ghost" size="icon-lg" aria-label="Wishlist" className="rounded-full"><Heart className="size-5" /></Button>
           <Button variant="ghost" size="icon-lg" aria-label="Cart" className="rounded-full"><ShoppingBag className="size-5" /></Button>
           <Button variant="ghost" size="icon-lg" aria-label="Akun" className="rounded-full"><User className="size-5" /></Button>
-          <Button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-white hover:bg-[#e94288]">Masuk</Button>
+          <Button className="h-10 rounded-full bg-[#7C3FB3] px-5 text-white hover:bg-[#69319b]">Masuk</Button>
         </div>
         <Sheet>
           <SheetTrigger render={<Button variant="ghost" size="icon-lg" className="ml-auto rounded-full md:hidden" aria-label="Buka menu" />}><Menu className="size-5" /></SheetTrigger>
@@ -153,7 +153,7 @@ export function Navbar() {
                 <Input name="q" aria-label="Cari produk mobile" placeholder="Cari produk" className="h-11 border-0 focus-visible:ring-0" />
               </form>
               <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
-                {navItems.map((item) => <Link key={item.href} href={item.href} className="rounded-lg px-3 py-3 text-sm font-medium text-[#222222] hover:bg-[#FF4F9A]/8">{item.label}</Link>)}
+                {navItems.map((item) => <Link key={item.href} href={item.href} className="rounded-lg px-3 py-3 text-sm font-medium text-[#222222] hover:bg-[#7C3FB3]/8">{item.label}</Link>)}
               </nav>
             </div>
           </SheetContent>
@@ -161,7 +161,7 @@ export function Navbar() {
       </div>
       <nav className="hidden border-t border-[#222222]/6 bg-white lg:block" aria-label="Category navigation">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-8 py-2.5">
-          {navItems.map((item) => <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/76 transition hover:bg-[#FF4F9A]/8 hover:text-[#FF4F9A]">{item.label}</Link>)}
+          {navItems.map((item) => <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-[#222222]/76 transition hover:bg-[#7C3FB3]/8 hover:text-[#7C3FB3]">{item.label}</Link>)}
         </div>
       </nav>
     </header>

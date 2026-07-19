@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
@@ -75,20 +75,20 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
     <main className="bg-white">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="text-sm text-[#222222]/50">
-          <Link href="/products" className="hover:text-[#FF4F9A]">Produk</Link> / {product.category.name} / {product.name}
+          <Link href="/products" className="hover:text-[#7C3FB3]">Produk</Link> / {product.category.name} / {product.name}
         </div>
 
         <section className="mt-5 grid gap-8 lg:grid-cols-[0.98fr_1.02fr]">
           <div className="grid gap-4 sm:grid-cols-[88px_1fr]">
             <div className="order-2 flex gap-3 sm:order-1 sm:flex-col">
               {(product.images.length ? product.images : [{ url: "/logo.png.png", alt: product.name }]).map((image) => (
-                <button key={image.url} onClick={() => setActiveImage(image.url)} className={`relative size-20 overflow-hidden rounded-lg border bg-white ${activeImage === image.url ? "border-[#FF4F9A]" : "border-[#222222]/8"}`}>
+                <button key={image.url} onClick={() => setActiveImage(image.url)} className={`relative size-20 overflow-hidden rounded-lg border bg-white ${activeImage === image.url ? "border-[#7C3FB3]" : "border-[#222222]/8"}`}>
                   <Image src={image.url} alt={image.alt ?? product.name} fill sizes="80px" className="object-contain p-2" />
                 </button>
               ))}
             </div>
             <button onClick={() => setIsZoomed(true)} className="group relative order-1 aspect-square overflow-hidden rounded-lg border border-[#222222]/8 bg-[#FAFAFA] sm:order-2" aria-label="Zoom foto produk">
-              {discount ? <span className="absolute left-4 top-4 z-10 rounded-full bg-[#FF4F9A] px-3 py-1 text-sm font-bold text-white">-{discount}%</span> : null}
+              {discount ? <span className="absolute left-4 top-4 z-10 rounded-full bg-[#7C3FB3] px-3 py-1 text-sm font-bold text-white">-{discount}%</span> : null}
               <Image src={activeImage} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-contain p-8 transition duration-300 group-hover:scale-105" priority />
               <span className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-[#222222] shadow-sm">
                 <Search className="size-4" /> Zoom
@@ -97,27 +97,27 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
           </div>
 
           <div className="lg:pr-2">
-            <Link href={`/brands/${product.brand.slug}`} className="text-sm font-semibold text-[#FF4F9A]">{product.brand.name}</Link>
+            <Link href={`/brands/${product.brand.slug}`} className="text-sm font-semibold text-[#7C3FB3]">{product.brand.name}</Link>
             <h1 className="mt-2 text-3xl font-semibold leading-tight text-[#222222] sm:text-[40px]">{product.name}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-[#222222]/55">
               <span>SKU {product.sku}</span>
               <span>•</span>
               <span className="inline-flex items-center gap-1"><Star className="size-4 fill-[#FFB547] text-[#FFB547]" /> {averageRating} ({product.reviews.length} review)</span>
               <span>•</span>
-              <Link href={`/categories/${product.category.slug}`} className="hover:text-[#FF4F9A]">{product.category.name}</Link>
+              <Link href={`/categories/${product.category.slug}`} className="hover:text-[#7C3FB3]">{product.category.name}</Link>
             </div>
-            <div className="mt-6 rounded-lg border border-[#222222]/8 bg-[#FFF8FB] p-5">
+            <div className="mt-6 rounded-lg border border-[#222222]/8 bg-[#F2FBF9] p-5">
               <div className="flex flex-wrap items-end gap-3">
-                <p className="text-3xl font-bold text-[#FF4F9A]">{formatRupiah(price)}</p>
+                <p className="text-3xl font-bold text-[#7C3FB3]">{formatRupiah(price)}</p>
                 {compareAtPrice ? <p className="pb-1 text-sm text-[#222222]/38 line-through">{formatRupiah(compareAtPrice)}</p> : null}
-                {discount ? <span className="mb-1 rounded-full bg-[#FF4F9A]/10 px-2.5 py-1 text-xs font-bold text-[#FF4F9A]">Hemat {discount}%</span> : null}
+                {discount ? <span className="mb-1 rounded-full bg-[#7C3FB3]/10 px-2.5 py-1 text-xs font-bold text-[#7C3FB3]">Hemat {discount}%</span> : null}
               </div>
               <p className="mt-3 text-sm text-[#222222]/58">Minimum order {product.minOrder} pcs • Stok {product.stock} pcs • Berat {product.weight} gram</p>
             </div>
             <p className="mt-6 leading-7 text-[#222222]/68">{product.shortDescription ?? product.description ?? "Produk kosmetik original untuk kebutuhan reseller dan toko kosmetik."}</p>
 
-            <div className="mt-6 rounded-2xl bg-[#FFF4F9] p-4">
-              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Gift className="size-5 text-[#FF4F9A]" /> Voucher tersedia</p>
+            <div className="mt-6 rounded-2xl bg-[#F2FBF9] p-4">
+              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Gift className="size-5 text-[#7C3FB3]" /> Voucher tersedia</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 <div className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#222222]">Diskon grosir reseller</div>
                 <div className="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#222222]">Gratis ongkir area tertentu</div>
@@ -130,30 +130,30 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
                 <div className="grid h-11 grid-cols-3 overflow-hidden rounded-full border border-[#222222]/12 bg-white">
                   <button onClick={() => setQuantity((value) => Math.max(product.minOrder, value - 1))} className="flex w-12 items-center justify-center text-[#222222]/60" aria-label="Kurangi jumlah"><Minus className="size-4" /></button>
                   <span className="flex w-12 items-center justify-center text-sm font-semibold text-[#222222]">{quantity}</span>
-                  <button onClick={() => setQuantity((value) => Math.min(product.stock, value + 1))} className="flex w-12 items-center justify-center text-[#FF4F9A]" aria-label="Tambah jumlah"><Plus className="size-4" /></button>
+                  <button onClick={() => setQuantity((value) => Math.min(product.stock, value + 1))} className="flex w-12 items-center justify-center text-[#7C3FB3]" aria-label="Tambah jumlah"><Plus className="size-4" /></button>
                 </div>
                 <p className="text-sm text-[#222222]/55">Maksimal pembelian {product.stock} pcs</p>
               </div>
             </div>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_52px]">
-              <button className="h-12 rounded-full bg-[#FF4F9A] text-sm font-semibold text-white hover:bg-[#e94288]">
+              <button className="h-12 rounded-full bg-[#7C3FB3] text-sm font-semibold text-white hover:bg-[#69319b]">
                 <ShoppingBag className="mr-2 inline size-5" /> Tambah ke Keranjang
               </button>
-              <button className="h-12 rounded-full border border-[#FF4F9A] bg-white text-sm font-semibold text-[#FF4F9A] hover:bg-[#FFF4F9]">
+              <button className="h-12 rounded-full border border-[#7C3FB3] bg-white text-sm font-semibold text-[#7C3FB3] hover:bg-[#F2FBF9]">
                 Beli Sekarang
               </button>
-              <button onClick={toggleWishlist} className={`flex h-12 items-center justify-center rounded-full border ${wishlisted ? "border-[#FF4F9A] text-[#FF4F9A]" : "border-[#222222]/12 text-[#222222]/65"}`} aria-label="Wishlist">
-                <Heart className={wishlisted ? "size-5 fill-[#FF4F9A]" : "size-5"} />
+              <button onClick={toggleWishlist} className={`flex h-12 items-center justify-center rounded-full border ${wishlisted ? "border-[#7C3FB3] text-[#7C3FB3]" : "border-[#222222]/12 text-[#222222]/65"}`} aria-label="Wishlist">
+                <Heart className={wishlisted ? "size-5 fill-[#7C3FB3]" : "size-5"} />
               </button>
             </div>
             <div className="mt-5 rounded-2xl border border-[#222222]/8 p-4">
-              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Truck className="size-5 text-[#FF4F9A]" /> Info Pengiriman</p>
+              <p className="flex items-center gap-2 text-sm font-bold text-[#222222]"><Truck className="size-5 text-[#7C3FB3]" /> Info Pengiriman</p>
               <p className="mt-2 text-sm leading-6 text-[#222222]/60">Pengiriman reseller diproses dari gudang distributor. Estimasi dan ongkir mengikuti alamat tujuan.</p>
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <div className="rounded-lg border border-[#222222]/8 p-4 text-sm font-semibold text-[#222222]"><ShieldCheck className="mb-2 size-5 text-[#2BB673]" />Original</div>
-              <div className="rounded-lg border border-[#222222]/8 p-4 text-sm font-semibold text-[#222222]"><Store className="mb-2 size-5 text-[#FF4F9A]" />Harga Reseller</div>
+              <div className="rounded-lg border border-[#222222]/8 p-4 text-sm font-semibold text-[#222222]"><Store className="mb-2 size-5 text-[#7C3FB3]" />Harga Reseller</div>
               <div className="rounded-lg border border-[#222222]/8 p-4 text-sm font-semibold text-[#222222]">BPOM<br /><span className="text-xs font-normal text-[#222222]/55">{product.bpomNumber ?? "Tersedia"}</span></div>
             </div>
           </div>
@@ -178,7 +178,7 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
             <h2 className="text-lg font-semibold text-[#222222]">Recently Viewed</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {recentlyViewed.map((slug) => (
-                <span key={slug} className="rounded-full bg-[#FF4F9A]/8 px-3 py-1 text-xs font-semibold text-[#FF4F9A]">{slug}</span>
+                <span key={slug} className="rounded-full bg-[#7C3FB3]/8 px-3 py-1 text-xs font-semibold text-[#7C3FB3]">{slug}</span>
               ))}
             </div>
           </div>
@@ -191,7 +191,7 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
               <article key={review.id} className="rounded-lg border border-[#222222]/8 p-5">
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-semibold text-[#222222]">{review.name}</p>
-                  <p className="text-sm font-semibold text-[#FF4F9A]">{review.rating}/5</p>
+                  <p className="text-sm font-semibold text-[#7C3FB3]">{review.rating}/5</p>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-[#222222]/62">{review.comment}</p>
               </article>
@@ -204,10 +204,10 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
         <section className="mt-14">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-[#FF4F9A]">Related Product</p>
+              <p className="text-sm font-semibold text-[#7C3FB3]">Related Product</p>
               <h2 className="text-2xl font-semibold text-[#222222]">Produk terkait</h2>
             </div>
-            <Link href={`/categories/${product.category.slug}`} className="text-sm font-semibold text-[#FF4F9A]">Lihat kategori</Link>
+            <Link href={`/categories/${product.category.slug}`} className="text-sm font-semibold text-[#7C3FB3]">Lihat kategori</Link>
           </div>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {relatedProducts.map((item) => <ProductCard key={item.slug} product={item} />)}
@@ -224,8 +224,8 @@ export function ProductDetailClient({ product, relatedProducts }: { product: Pro
         </div>
       ) : null}
       <div className="fixed inset-x-0 bottom-[64px] z-40 grid grid-cols-2 gap-2 border-t border-[#222222]/8 bg-white p-3 shadow-[0_-12px_30px_rgba(34,34,34,0.10)] md:hidden">
-        <button className="h-11 rounded-full border border-[#FF4F9A] text-sm font-bold text-[#FF4F9A]">Keranjang</button>
-        <button className="h-11 rounded-full bg-[#FF4F9A] text-sm font-bold text-white">Beli Sekarang</button>
+        <button className="h-11 rounded-full border border-[#7C3FB3] text-sm font-bold text-[#7C3FB3]">Keranjang</button>
+        <button className="h-11 rounded-full bg-[#7C3FB3] text-sm font-bold text-white">Beli Sekarang</button>
       </div>
     </main>
   )

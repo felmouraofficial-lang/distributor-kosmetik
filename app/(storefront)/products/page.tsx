@@ -55,7 +55,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between gap-4 border-b border-[#222222]/8 pb-6 md:flex-row md:items-end">
           <div>
-            <p className="text-sm font-semibold text-[#FF4F9A]">Product Listing</p>
+            <p className="text-sm font-semibold text-[#7C3FB3]">Product Listing</p>
             <h1 className="mt-1 text-3xl font-semibold text-[#222222]">Belanja Produk Kosmetik</h1>
             <p className="mt-2 text-sm text-[#222222]/58">Semua produk ditarik dari database PostgreSQL melalui Prisma.</p>
           </div>
@@ -70,7 +70,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               <option value="price-low">Harga terendah</option>
               <option value="price-high">Harga tertinggi</option>
             </select>
-            <button className="h-10 rounded-full bg-[#FF4F9A] px-5 text-sm font-semibold text-white">Terapkan</button>
+            <button className="h-10 rounded-full bg-[#7C3FB3] px-5 text-sm font-semibold text-white">Terapkan</button>
           </form>
         </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
@@ -78,7 +78,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           <section>
             <div className="mb-4 flex items-center justify-between text-sm text-[#222222]/55">
               <span>{products.length} produk ditemukan</span>
-              <Link href="/" className="font-semibold text-[#FF4F9A]">Kembali ke beranda</Link>
+              <Link href="/" className="font-semibold text-[#7C3FB3]">Kembali ke beranda</Link>
             </div>
             {products.length ? (
               <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
