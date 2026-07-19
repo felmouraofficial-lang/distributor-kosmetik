@@ -35,6 +35,7 @@ export default async function ProductsAdminPage() {
           <Field label="Harga"><input name="price" type="number" className={inputClass} /></Field>
           <Field label="Harga Diskon"><input name="compareAtPrice" type="number" className={inputClass} /></Field>
           <Field label="Stock"><input name="stock" type="number" className={inputClass} /></Field>
+          <Field label="Minimum Order"><input name="minOrder" type="number" defaultValue="1" min="1" className={inputClass} /></Field>
           <Field label="Weight (gram)"><input name="weight" type="number" className={inputClass} /></Field>
           <Field label="BPOM"><input name="bpomNumber" className={inputClass} /></Field>
           <Field label="Thumbnail URL"><input name="thumbnail" className={inputClass} /></Field>
@@ -69,6 +70,7 @@ export default async function ProductsAdminPage() {
               <input name="price" type="number" defaultValue={Number(product.price)} className={inputClass} />
               <input name="compareAtPrice" type="number" defaultValue={product.compareAtPrice ? Number(product.compareAtPrice) : ""} className={inputClass} />
               <input name="stock" type="number" defaultValue={product.stock} className={inputClass} />
+              <input name="minOrder" type="number" min="1" defaultValue={product.minOrder ?? 1} className={inputClass} />
               <input name="weight" type="number" defaultValue={product.weight} className={inputClass} />
               <input name="bpomNumber" defaultValue={product.bpomNumber ?? ""} className={inputClass} />
               <input name="thumbnail" defaultValue={product.thumbnail ?? ""} className={inputClass} />

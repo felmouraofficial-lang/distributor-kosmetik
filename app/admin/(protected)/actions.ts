@@ -18,6 +18,10 @@ function numberValue(formData: FormData, key: string, fallback = 0) {
   return Number.isFinite(value) ? value : fallback
 }
 
+function minimumOneValue(formData: FormData, key: string) {
+  return Math.max(1, numberValue(formData, key, 1))
+}
+
 function slugify(value: string) {
   return value.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
 }
@@ -175,7 +179,7 @@ export async function saveProduct(formData: FormData) {
     price: numberValue(formData, "price"),
     compareAtPrice: text(formData, "compareAtPrice") ? numberValue(formData, "compareAtPrice") : null,
     stock: numberValue(formData, "stock"),
-    minOrder: numberValue(formData, "minOrder", 1),
+    minOrder: minimumOneValue(formData, "minOrder"),
     isPublished: bool(formData, "isPublished"),
     isFeatured: bool(formData, "isFeatured"),
     isBestSeller: bool(formData, "isBestSeller"),

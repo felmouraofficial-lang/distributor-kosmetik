@@ -152,7 +152,7 @@ function makeProduct([brandName, brandSlug, displayCategory, categorySlug, produ
     price,
     compareAtPrice,
     stock: 40 + (index % 12) * 15,
-    minOrder: index % 4 === 0 ? 6 : 3,
+    minOrder: 1,
     isPublished: true,
     isFeatured: isBestSeller,
     isBestSeller,
